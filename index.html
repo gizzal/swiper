@@ -3,90 +3,69 @@
 <head>
     <meta charset="UTF-8">
     <title>Document</title>
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <style>
         body {
-            background-color: #222
+            margin: 0;
+            padding: 0;
         }
 
-        #menuSlidder {
-            background-color: black;
+        .container {
+            position: relative;
+            height: 100px;
+            overflow-x: hidden;
+        }
+
+        #box {
+            position: absolute;
             width: 100%;
-            height: 200px;
-            background-image: url("https://dam.cocinafacil.com.mx/wp-content/uploads/2019/04/hot-dog-aderezo-tocino.png");
-            background-position: center;
-            background-size: cover;
+            height: 100px;
+            background-color: brown;
+            transition: 0.5s;
+            left: 0;
+            top: 0;
         }
     </style>
 </head>
 
 <body>
-
     <div class="container">
+        <div id="box" ontouchmove="checkme(event)">
 
-        <div class="row">
-            <div class="col-12">
-                <div id="menuSlidder"></div>
-                <div id="counter">3</div>
-            </div>
         </div>
     </div>
+    <div id="position"></div>
 
     <script>
-        let swipedetect = (el, callback) => {
+        let box = document.getElementById("box")
+        let boxWidth = box.getBoundingClientRect().width
+        let position = document.getElementById("position")
 
-            var touchsurface = el,
-                swipedir,
-                startX,
-                startY,
-                distX,
-                distY,
-                threshold =10, //required min distance traveled to be considered swipe
-                restraint = 100, // maximum distance allowed at the same time in perpendicular direction
-                allowedTime = 300, // maximum time allowed to travel that distance
-                elapsedTime,
-                startTime,
-                handleswipe = callback || function(swipedir) {}
+        let checkme = (event) => {
+            var touch = event.touches[0];
+            let positionX = touch.pageX - boxWidth / 2
+            let positionY = touch.pageY - boxWidth / 2
+            let order = 0
 
-            touchsurface.addEventListener('touchstart', function(e) {
-                alert("aaah")
-                var touchobj = e.changedTouches[0]
-                swipedir = 'none'
-                dist = 0
-                startX = touchobj.pageX
-                startY = touchobj.pageY
-                startTime = new Date().getTime() // record time when finger first makes contact with surface
-                e.preventDefault()
-            }, false)
+            if (positionX > 50) {
+                box.style.left = `${boxWidth-100}px`;
+                order = 1
+            }
 
-            touchsurface.addEventListener('touchmove', function(e) {
-                e.preventDefault() // prevent scrolling when inside DIV
-            }, false)
+            if (positionX <= 50 && positionX >= -50) {
+                box.style.left = "0px";
+                order = 0
+            }
 
-            touchsurface.addEventListener('touchend', function(e) {
-                var touchobj = e.changedTouches[0]
-                distX = touchobj.pageX - startX // get horizontal dist traveled by finger while in contact with surface
-                distY = touchobj.pageY - startY // get vertical dist traveled by finger while in contact with surface
-                elapsedTime = new Date().getTime() - startTime // get time elapsed
-                if (elapsedTime <= allowedTime) { // first condition for awipe met
-                    if (Math.abs(distX) >= threshold && Math.abs(distY) <= restraint) { // 2nd condition for horizontal swipe met
-                        swipedir = (distX < 0) ? 'left' : 'right' // if dist traveled is negative, it indicates left swipe
-                    } else if (Math.abs(distY) >= threshold && Math.abs(distX) <= restraint) { // 2nd condition for vertical swipe met
-                        swipedir = (distY < 0) ? 'up' : 'down' // if dist traveled is negative, it indicates up swipe
-                    }
-                }
-                handleswipe(swipedir)
-                e.preventDefault()
-            }, false)
+//            if (positionX < -50) {
+//                box.style.left = `-${boxWidth-100}px`;
+//            }
+
+            // box.style.left = `${positionX}px`; 
+            position.innerHTML = `hello X ${positionX} y ${positionY} Pancho:${order}`
+
+            //   box.style.top = `${positionY}px`;
+
         }
-        
-        let menuSlidder = document.getElementById("menuSlidder")
-
-        swipedetect(menuSlidder, (swipedir) => {
-            swipedir contains either "none", "left", "right", "top", or "down"
-            if (swipedir == 'left')
-                alert('You just swiped left!')
-        })
     </script>
 </body></html>
