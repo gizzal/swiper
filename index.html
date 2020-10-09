@@ -30,7 +30,7 @@
 
 <body>
     <div class="container">
-        <div id="box" ontouchmove="checkme(event)">
+        <div id="box" ontouchmove="swipe(event)" ontouchend="makeOrder(event)">
 
         </div>
     </div>
@@ -38,40 +38,42 @@
 
     <script>
         let box = document.getElementById("box")
+        let lastMove = 0;
+
+
         let boxWidth = box.getBoundingClientRect().width
         let position = document.getElementById("position")
         let order = 0
-        
-        let checkme = async (event) => {
+
+
+        let makeOrder = (event) => {
+            box.style.left = "0px";
+            if (lastMove >= 60) {
+                order = order + 1
+            }
+            if (lastMove <= 60) {
+                order = order - 1
+            }
+            console.log(lastMove);
+            position.innerHTML = `Pancho:${order}`
+        }
+
+
+        let swipe = async (event) => {
             var touch = event.touches[0];
             let positionX = touch.pageX - boxWidth / 2
-            let positionY = touch.pageY - boxWidth / 2
 
-            if (positionX > 50) {
+            if (positionX > 60) {
                 box.style.left = `${boxWidth-100}px`;
-                order = order + 1
-                await sleep(500)
-                box.style.left = "0px";
-
             }
 
-            //            if (positionX <= 50 && positionX >= -50) {
-            //                box.style.left = "0px";
-            //                order = order-1
-            //            }
 
-            if (positionX < -50) {
+            if (positionX < -60) {
                 box.style.left = `-${boxWidth-100}px`;
-                order = order - 1
-                await sleep(500)
-                box.style.left = "0px";
 
             }
 
-            // box.style.left = `${positionX}px`; 
-            position.innerHTML = `hello X ${positionX} y ${positionY} Pancho:${order}`
-
-            //   box.style.top = `${positionY}px`;
+            lastMove = positionX;
 
         }
 
