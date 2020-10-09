@@ -40,32 +40,45 @@
         let box = document.getElementById("box")
         let boxWidth = box.getBoundingClientRect().width
         let position = document.getElementById("position")
-
-        let checkme = (event) => {
+        let order = 0
+        
+        let checkme = async (event) => {
             var touch = event.touches[0];
             let positionX = touch.pageX - boxWidth / 2
             let positionY = touch.pageY - boxWidth / 2
-            let order = 0
 
             if (positionX > 50) {
                 box.style.left = `${boxWidth-100}px`;
-                order = 1
-            }
-
-            if (positionX <= 50 && positionX >= -50) {
+                order = order + 1
+                await sleep(500)
                 box.style.left = "0px";
-                order = 0
+
             }
 
-//            if (positionX < -50) {
-//                box.style.left = `-${boxWidth-100}px`;
-//            }
+            //            if (positionX <= 50 && positionX >= -50) {
+            //                box.style.left = "0px";
+            //                order = order-1
+            //            }
+
+            if (positionX < -50) {
+                box.style.left = `-${boxWidth-100}px`;
+                order = order - 1
+                await sleep(500)
+                box.style.left = "0px";
+
+            }
 
             // box.style.left = `${positionX}px`; 
             position.innerHTML = `hello X ${positionX} y ${positionY} Pancho:${order}`
 
             //   box.style.top = `${positionY}px`;
 
+        }
+
+        let sleep = (ms) => {
+            return new Promise(
+                resolve => setTimeout(resolve, ms)
+            );
         }
     </script>
 </body></html>
